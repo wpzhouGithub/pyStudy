@@ -20,12 +20,13 @@ class Worker(threading.Thread):
         self._q = queue
         self.daemon = True
         self.start()
+
     def run(self):
         print('run in')
         while 1:
             f, args, kwargs = self._q.get()
             try:
-                print 'USE: {}'.format(self.name)  # 线程名字
+                print 'USE: %s' % self.name  # 线程名字
                 print f(*args, **kwargs)
             except Exception as e:
                 print e
@@ -38,14 +39,19 @@ class ThreadPool(object):
         # Create Worker Thread
         for _ in range(num_t):
             Worker(self._q)
+
     def add_task(self, f, *args, **kwargs):
         self._q.put((f, args, kwargs))
+
     def wait_complete(self):
         self._q.join()
 
 
+print 'create thread pool start!!!'
 pool = ThreadPool()
-for _ in range(5):
+print 'create thread pool end!!!'
+time.sleep(10)
+for _ in range(4):
     wt = random()
     pool.add_task(double, wt)
     time.sleep(wt)
