@@ -23,14 +23,18 @@ def consumer():
 
 def produce(c):
     print('c in produce:', c)
-    c.next()
+    # c.next()
     n = 0;
     while n < 5:
-        n += 1
         print('p producing %s...'%n)
-        r = c.send(n)
-        print('p consumer %s...'%r)
-
+        if n == 0:
+            print(c.send(None))
+        else:
+            try:
+                print(c.send('send:%s' % i))
+            except Exception as e:
+                print('e:', e)
+        n += 1
     c.close()
 
 if __name__ == '__main__':
